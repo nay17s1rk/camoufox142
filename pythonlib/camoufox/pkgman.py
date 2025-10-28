@@ -51,7 +51,23 @@ if sys.platform not in OS_MAP:
 
 OS_NAME: Literal['mac', 'win', 'lin'] = OS_MAP[sys.platform]
 
-INSTALL_DIR: Path = Path(user_cache_dir("camoufox"))
+# INSTALL_DIR: Path = Path(user_cache_dir("camoufox"))
+
+# Binary path modification
+# This is where pkgman.py is located
+CURRENT_DIR = Path(os.path.abspath(__file__)).parent
+
+# Move up until we find 'venv' folder (dynamic, not hardcoded number)
+for parent in CURRENT_DIR.parents:
+    if parent.name == "venv":
+        VENV_DIR = parent
+        break
+else:
+    raise RuntimeError("Could not find venv directory above current script")
+
+# Binary download path (inside venv)
+INSTALL_DIR: Path = VENV_DIR / "AppData" / "Local" / "Camoufox"
+
 LOCAL_DATA: Path = Path(os.path.abspath(__file__)).parent
 
 # The supported architectures for each OS
